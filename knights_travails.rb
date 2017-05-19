@@ -40,20 +40,43 @@ class GameBoard
 
 end
 
-$board = GameBoard.new
+
 
 def knight_moves position, destination
+  board = GameBoard.new
   # make sure position and destination are valid (i.e., within gameboard)
-  if $board.valid_move? position and $board.valid_move? destination
-    "YUP"
+  if board.valid_move? position and board.valid_move? destination
+    p "YUP"
   else
-    "Invalid position and/or destination"
+    p "Invalid position and/or destination"
   end
 
   # initialize knight with position
   root_knight = Knight.new position
 
   # we then come up with all the different moves that are possible from that position
+  # There are 8 cases:
+    # add 1 to x, 2 to y
+    # add 1 to x, -2 to y
+    # add -1 to x, 2 to y
+    # add -1 to x, -2 to y
+    # add 2 to x, 1 to y
+    # add 2 to x, -1 to y
+    # add -2 to x, 1 to y
+    # add -2 to x, -1 to y
+  # How to implement:
+    # put the cases in an array. For each item, apply it to the current position
+  cases = [ [1,2], [1,-2], [-1,2], [-1,-2], [2,1], [2,-1], [-2,1], [-2,-1] ]
+
+    # What would map do? 
+      # A: Collect the results of the block into an array.
+    # So how should we use map?
+      # A: by using conditionals in the block. I suppose if we have a move
+      # that isn't valid, we could use next to skip it?
+  valid_moves = cases.map do 
+
+
+
 
   # then we initialize a bunch of knights with those positions, and pass them as children to 
   # the initial knight.
