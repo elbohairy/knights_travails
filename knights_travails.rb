@@ -86,21 +86,10 @@ def knight_moves position, destination
     queue.unshift new_knight
   end
 
-  p root_knight.inspect
-
-  # THEN, we have a problem.
-    # How do we then add children to those childreN?
-    # ANSWER (i think):
-      # the children will be in an array whose size we can find.
-        # we can simply loop through each item (knight) in the array.
-        # and for each knight we'll just do again what we did to the first knight.
-
   current_knight = root_knight
 
   counter = 0
 
-  p "THE QUEUE"
-  p queue.inspect
 
   until counter == 7
     current_knight.moves.each do |move|
@@ -115,71 +104,43 @@ def knight_moves position, destination
       
     end
 
-    p counter
-    p 'The current knight:'
-
-    p current_knight
-    p 'tHE QUEUE:'
-
-    p queue
 
     current_knight = queue.pop
 
-    p "The current knight, after queue.pop"
-    p current_knight
     counter += 1
 
-    # right here, I need to find some way of changing root_knight to its children, then
-    # to the children's children, until some arbitrary point.
-    # But I don't see the obvious way to do that.
-    # Refactoring may help with that (lots of duplication)
-
-    # POSSIBLE SOLUTION:
-      # use a queue. Just keep adding to the queue until some arbitrary point
-      # implementation?
-        # I have no idea
 
   end
-  p "Root knight's current array of moves"
-  p root_knight.moves
-  p "The first child of root_knight"
-  p root_knight.moves[0]
-  p "The moves of the first child of root_knight"
-  p root_knight.moves[0].moves
-  p "The movoes of the first child of the first child of the root_knight"
-  p root_knight.moves[0].moves[0].moves
-
-
   root_knight
 
-  # FINISHED basic structure.
-    # Now just need to figure out how to loop it properly.
-      # e.g., current knight will need to change every iteration
-
-    # How do we stop this from going on forever?
-      # A: we could just arbitrarily limit how many times we do this whole process
+  
 end
 
 root = knight_moves [7, 7], [2, 6]
 
 
-# I THINK we have a working tree. Now we just need to search it!
-
-
-def dfs_rec knight, target
+# this works, but doesn't find the shortest path. It simply finds all the knights
+# whose position equals the target. But since our knights don't have parents,
+# it is difficult to go backward.
+def dfs_rec knight, target, collector=[]
 
   if knight
     puts "#{knight.position} and #{target}"
+
+    
+
     if knight.position == target
-      return knight
+      collector.push knight
     end
     moves = knight.moves.size - 1
     moves.times do |num|
-      dfs_rec knight.moves[num], target
+      dfs_rec knight.moves[num], target, collector
     end
   end
+
+  return collector
 end
 
 puts "cheese"
 
-p dfs_rec root, [4,0]
+p dfs_rec root, [2,7]
