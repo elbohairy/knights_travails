@@ -53,8 +53,9 @@ def validated_moves position
       next
     end
   end
-
   valid_moves.compact!
+
+  return valid_moves
 end
 
 
@@ -75,8 +76,14 @@ def knight_moves position, destination
   # then we initialize a bunch of knights with those positions, and pass them as children to 
   # the initial knight.
 
+  queue = []
+
   valid_moves.each do |position|
-    root_knight.moves.push Knight.new position
+    new_knight = Knight.new position
+
+    root_knight.moves.push new_knight
+
+    queue.unshift new_knight
   end
 
   p root_knight.inspect
@@ -91,16 +98,35 @@ def knight_moves position, destination
   current_knight = root_knight
 
   counter = 0
-  until counter == 3
+
+  p "THE QUEUE"
+  p queue.inspect
+
+  until counter == 7
     current_knight.moves.each do |move|
       # need to create an array of valid moves for that knight
       valid_moves = validated_moves move.position
       # THEN push instances of knights with those positions (from the arrays) to the knight
       valid_moves.each do |position|
-        move.moves.push Knight.new position
+        new_knight = Knight.new position
+        move.moves.push new_knight
+        queue.unshift new_knight
       end
+      
     end
 
+    p counter
+    p 'The current knight:'
+
+    p current_knight
+    p 'tHE QUEUE:'
+
+    p queue
+
+    current_knight = queue.pop
+
+    p "The current knight, after queue.pop"
+    p current_knight
     counter += 1
 
     # right here, I need to find some way of changing root_knight to its children, then
@@ -114,11 +140,17 @@ def knight_moves position, destination
         # I have no idea
 
   end
+  p "Root knight's current array of moves"
+  p root_knight.moves
+  p "The first child of root_knight"
+  p root_knight.moves[0]
+  p "The moves of the first child of root_knight"
+  p root_knight.moves[0].moves
+  p "The movoes of the first child of the first child of the root_knight"
+  p root_knight.moves[0].moves[0].moves
 
 
-  p 'SPAGHETTI'
-  p root_knight
-
+  root_knight
 
   # FINISHED basic structure.
     # Now just need to figure out how to loop it properly.
@@ -128,4 +160,26 @@ def knight_moves position, destination
       # A: we could just arbitrarily limit how many times we do this whole process
 end
 
-p knight_moves [7, 7], [2, 6]
+root = knight_moves [7, 7], [2, 6]
+
+
+# I THINK we have a working tree. Now we just need to search it!
+
+
+def dfs_rec knight, target
+
+  if knight
+    puts "#{knight.position} and #{target}"
+    if knight.position == target
+      return knight
+    end
+    moves = knight.moves.size - 1
+    moves.times do |num|
+      dfs_rec knight.moves[num], target
+    end
+  end
+end
+
+puts "cheese"
+
+p dfs_rec root, [4,0]
