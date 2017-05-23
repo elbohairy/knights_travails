@@ -1,10 +1,11 @@
 class Knight
 	attr_accessor :position, :moves
 
-  def initialize position, *moves
+  def initialize position, parent='root', *moves
     @position = position
     # use the splat operator to pack in an arbitrary number of arguments
     @moves = *moves # I think the moves should be instances of Knights at other positions
+    @parent = parent
   end
 
 
@@ -79,7 +80,7 @@ def knight_moves position, destination
   queue = []
 
   valid_moves.each do |position|
-    new_knight = Knight.new position
+    new_knight = Knight.new position, root_knight
 
     root_knight.moves.push new_knight
 
@@ -97,7 +98,7 @@ def knight_moves position, destination
       valid_moves = validated_moves move.position
       # THEN push instances of knights with those positions (from the arrays) to the knight
       valid_moves.each do |position|
-        new_knight = Knight.new position
+        new_knight = Knight.new position, move
         move.moves.push new_knight
         queue.unshift new_knight
       end
@@ -143,4 +144,6 @@ end
 
 puts "cheese"
 
-p dfs_rec root, [2,7]
+x = dfs_rec root, [6,0]
+
+p x.size.inspect
