@@ -1,5 +1,21 @@
+# The way I did it here seems quite bad.
+# First, I build a tree of knights, with every possibility available to each knight
+# added as children--which gets ridiculous fairly quickly.
+# Then I search through for the destination move in the dfs_rec method, and
+# collect the knights that actually pass
+# Then I'd need to search through the resulting array,
+# and check for which result led to the smallest number of moves.
+
+# The big mistake was simply producing a tree with every single possibility.
+# I should've used DFS with both the beginning and the end in mind, and found
+# paths that way.
+
+# Now, I'm tired of looking at this code, and don't want to refactor just yet.
+
+# Maybe one day we'll come back to it.
+
 class Knight
-	attr_accessor :position, :moves
+	attr_accessor :position, :moves, :parent
 
   def initialize position, parent='root', *moves
     @position = position
@@ -146,4 +162,23 @@ puts "cheese"
 
 x = dfs_rec root, [6,0]
 
+p "The first item in x"
+p x[0]
+p "The parent of the first item in x"
+p x[0].parent
+
 p x.size.inspect
+
+def rec_diss knight
+  p knight.position
+  if knight.parent == 'root'
+    return 'fini'
+  end
+  rec_diss knight.parent
+end
+
+rec_diss x[0]
+
+p "lol"
+
+rec_diss x[1]
